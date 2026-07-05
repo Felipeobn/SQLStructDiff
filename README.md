@@ -1,5 +1,8 @@
 # SQLStructDiff
 
+[![build](https://github.com/Felipeobn/SQLStructDiff/actions/workflows/build.yml/badge.svg)](https://github.com/Felipeobn/SQLStructDiff/actions/workflows/build.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 Aplicação **desktop C# WinForms (.NET 9, Windows)** que compara a **estrutura de dois
 bancos SQL Server** e gera scripts de sincronização DDL.
 

@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <!-- O Core vive numa subpasta; impede que o glob recursivo da UI engula seus fontes/obj. -->
+  <ItemGroup>
+    <Compile Remove="SQLStructDiff.Core\**\*.cs" />
+    <Content Remove="SQLStructDiff.Core\**\*" />
+    <None Remove="SQLStructDiff.Core\**\*" />
+    <EmbeddedResource Remove="SQLStructDiff.Core\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DiffPlex" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="SQLStructDiff.Core\SQLStructDiff.Core.csproj" />
+  </ItemGroup>
+
+</Project>

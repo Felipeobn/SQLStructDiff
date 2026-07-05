@@ -6,7 +6,7 @@
 Aplicação **desktop C# WinForms (.NET 9, Windows)** que compara a **estrutura de dois
 bancos SQL Server** e gera scripts de sincronização DDL.
 
-Compara quatro tipos de objeto: **Tabelas, Views, Procedures e Índices**.
+Compara cinco tipos de objeto: **Tabelas, Views, Procedures, Índices e Triggers**.
 
 > Fluxo: conectar nos 2 bancos → extrair schema → comparar → ver as diferenças em um
 > diff visual lado a lado (estilo WinMerge) → gerar/executar o script de sincronização.
@@ -15,8 +15,8 @@ Compara quatro tipos de objeto: **Tabelas, Views, Procedures e Índices**.
 
 ## Recursos
 
-- **Comparação de schema** de Tabelas, Views, Procedures e Índices, com status por
-  objeto: igual, diferente, só no banco da esquerda ou só no da direita.
+- **Comparação de schema** de Tabelas, Views, Procedures, Índices e Triggers, com
+  status por objeto: igual, diferente, só no banco da esquerda ou só no da direita.
 - **Diff visual lado a lado** com realce por linha (inserido / removido / alterado).
 - **Geração de script de sincronização** DDL, com opção de:
   - **só gerar** (copiar para a área de transferência ou salvar `.sql`); ou

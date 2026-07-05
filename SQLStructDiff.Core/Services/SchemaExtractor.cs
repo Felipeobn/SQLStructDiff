@@ -58,6 +58,7 @@ ORDER BY name;";
         var objects = new List<DbObject>();
         objects.AddRange(await ExtractModulesAsync(conn, DbObjectType.View, "V", ct));
         objects.AddRange(await ExtractModulesAsync(conn, DbObjectType.Procedure, "P", ct));
+        objects.AddRange(await ExtractModulesAsync(conn, DbObjectType.Trigger, "TR", ct));
         objects.AddRange(await ExtractTablesAsync(conn, ct));
         objects.AddRange(await ExtractIndexesAsync(conn, ct));
 

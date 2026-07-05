@@ -18,6 +18,8 @@ public sealed partial class ConnectionForm : Form
         if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
             return;
 
+        if (AppIcon.Value is { } icon) Icon = icon;
+
         _settings = _store.Load();
         _panelA.Initialize("A", _settings, _store, OnSettingsChanged);
         _panelB.Initialize("B", _settings, _store, OnSettingsChanged);

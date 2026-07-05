@@ -9,7 +9,7 @@
 Aplicação **desktop C# WinForms** (.NET 9, Windows) que compara a **estrutura de
 dois bancos SQL Server** (banco A × banco B) e gera scripts de sincronização.
 
-Compara 4 tipos de objeto: **Tabelas, Views, Procedures, Índices**.
+Compara 5 tipos de objeto: **Tabelas, Views, Procedures, Índices, Triggers**.
 
 Fluxo: conectar nos 2 bancos → extrair schema → comparar → ver diferenças com diff
 visual (estilo WinMerge) → gerar/executar script de sincronização A→B ou B→A.
@@ -97,8 +97,9 @@ A UI precisa de ambiente gráfico Windows e bancos SQL Server reais para testar.
   Se `ConsiderColumnOrder == false`, tabelas que diferem só na ordem das colunas
   são tratadas como Equal (assinatura com colunas ordenadas).
 - **Script de sync:** `SET XACT_ABORT ON` + `BEGIN TRAN` + batches separados por `GO`
-  + `COMMIT`. Ordem: DROP (proc→view→idx→tbl), depois CREATE/ALTER (tbl→idx→view→proc).
-  Views/Procs alteradas usam `CREATE OR ALTER`. Índices alterados: DROP+CREATE.
+  + `COMMIT`. Ordem: DROP (trigger→proc→view→idx→tbl), depois CREATE/ALTER
+  (tbl→idx→view→proc→trigger). Views/Procs/Triggers alterados usam `CREATE OR ALTER`.
+  Índices alterados: DROP+CREATE.
   **Tabelas que existem nos 2 bancos e diferem → `TableAlterGenerator`** gera
   ALTER COLUMN / ADD / DROP COLUMN + ajuste de DEFAULT (constraint).
 - **Execução:** `ScriptExecutor` separa por `GO`, ignora o controle de transação do
@@ -122,7 +123,8 @@ A UI precisa de ambiente gráfico Windows e bancos SQL Server reais para testar.
 
 ## 7. Estado atual — FEITO
 
-- [x] Extração de Tabelas/Views/Procedures/Índices (sem data de geração)
+- [x] Extração de Tabelas/Views/Procedures/Índices/**Triggers** (sem data de geração)
+- [x] Ícone da aplicação (`appicon.ico` + `ApplicationIcon`; janelas usam o ícone do exe)
 - [x] Comparação + status por objeto
 - [x] Diff visual lado-a-lado (WinMerge-like) no DataGridView
 - [x] Geração de script A→B e B→A (completo) e **por objeto** (menu de contexto)

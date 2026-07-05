@@ -42,6 +42,8 @@ public sealed partial class MainForm : Form
         _nameA = connA.DisplayName;
         _nameB = connB.DisplayName;
 
+        if (AppIcon.Value is { } icon) Icon = icon;
+
         Text = $"SQLStructDiff — {connA.FullDisplayName}  ×  {connB.FullDisplayName}";
         _txtA.HeaderText = _nameA;
         _txtB.HeaderText = _nameB;
@@ -380,6 +382,7 @@ public sealed partial class MainForm : Form
         DbObjectType.View => "Views",
         DbObjectType.Procedure => "Procedures",
         DbObjectType.Index => "Índices",
+        DbObjectType.Trigger => "Triggers",
         _ => type.ToString()
     };
 

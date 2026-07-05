@@ -6,5 +6,6 @@ public enum DbObjectType
     Table,
     View,
     Procedure,
-    Index
+    Index,
+    Trigger
 }

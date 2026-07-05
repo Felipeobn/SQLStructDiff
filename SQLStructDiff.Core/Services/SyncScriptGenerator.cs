@@ -21,7 +21,7 @@ public enum SyncDirection
 /// </summary>
 public sealed partial class SyncScriptGenerator
 {
-    [GeneratedRegex(@"^\s*CREATE\s+(VIEW|PROCEDURE|PROC)\b", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"^\s*CREATE\s+(VIEW|PROCEDURE|PROC|TRIGGER)\b", RegexOptions.IgnoreCase)]
     private static partial Regex CreateModule();
 
     public string Generate(IEnumerable<ObjectComparison> selected, SyncDirection direction,
@@ -44,17 +44,19 @@ public sealed partial class SyncScriptGenerator
         sb.AppendLine("GO");
         sb.AppendLine();
 
-        // Ordem para DROP: procedures -> views -> índices -> tabelas
+        // Ordem para DROP: triggers -> procedures -> views -> índices -> tabelas
+        EmitDrops(sb, items, direction, DbObjectType.Trigger);
         EmitDrops(sb, items, direction, DbObjectType.Procedure);
         EmitDrops(sb, items, direction, DbObjectType.View);
         EmitDrops(sb, items, direction, DbObjectType.Index);
         EmitDrops(sb, items, direction, DbObjectType.Table);
 
-        // Ordem para CREATE/ALTER: tabelas -> índices -> views -> procedures
+        // Ordem para CREATE/ALTER: tabelas -> índices -> views -> procedures -> triggers
         EmitCreates(sb, items, direction, DbObjectType.Table);
         EmitCreates(sb, items, direction, DbObjectType.Index);
         EmitCreates(sb, items, direction, DbObjectType.View);
         EmitCreates(sb, items, direction, DbObjectType.Procedure);
+        EmitCreates(sb, items, direction, DbObjectType.Trigger);
 
         sb.AppendLine("COMMIT TRANSACTION;");
         sb.AppendLine("GO");
@@ -123,8 +125,8 @@ public sealed partial class SyncScriptGenerator
 
     private string CreateStatement(DbObject source, CompareStatus status)
     {
-        // Views/Procedures alteradas usam CREATE OR ALTER.
-        if (source.Type is DbObjectType.View or DbObjectType.Procedure)
+        // Views/Procedures/Triggers alterados usam CREATE OR ALTER.
+        if (source.Type is DbObjectType.View or DbObjectType.Procedure or DbObjectType.Trigger)
         {
             var ddl = source.RawDefinition;
             if (status == CompareStatus.Different && CreateModule().IsMatch(ddl))
@@ -136,9 +138,9 @@ public sealed partial class SyncScriptGenerator
         return source.RawDefinition;
     }
 
-    // Views e Procedures são "módulos": seus scripts saem sem os comentários de marcação.
+    // Views, Procedures e Triggers são "módulos": seus scripts saem sem os comentários de marcação.
     private static bool IsModule(DbObjectType type) =>
-        type is DbObjectType.View or DbObjectType.Procedure;
+        type is DbObjectType.View or DbObjectType.Procedure or DbObjectType.Trigger;
 
     private static string DropStatement(ObjectComparison c)
     {
@@ -146,6 +148,7 @@ public sealed partial class SyncScriptGenerator
         {
             DbObjectType.Procedure => $"DROP PROCEDURE IF EXISTS {c.FullName};",
             DbObjectType.View => $"DROP VIEW IF EXISTS {c.FullName};",
+            DbObjectType.Trigger => $"DROP TRIGGER IF EXISTS {c.FullName};",
             DbObjectType.Table => $"DROP TABLE IF EXISTS {c.FullName};",
             DbObjectType.Index => DropIndex(c),
             _ => $"-- DROP não suportado para {c.Type}"
